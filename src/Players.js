@@ -8,13 +8,9 @@ export default function Players(){
     const[searchVal,setsearchVal]=useState('');
     useEffect(()=>{
         axios.get('https://api.npoint.io/20c1afef1661881ddc9c')
-        .then(res=>{
-            console.log(res.data);
-            setplayers(res.data.playerList);
-        }).catch(err=>{
-            console.log(err);
-        })
-        
+        .then(res=>
+        setplayers(res.data.playerList) )      
+           
     },[]);
     function displayMatch(arr)
     {
@@ -37,15 +33,14 @@ export default function Players(){
         var ply=players.sort((a,b) =>  a.Value-b.Value );
         
     }
+    
     sortPlayer();
-    function searchPlayer(){
-        //searchVal=document.getElementById('search').value;
-        
-        players.filter(ply => ply.TName===searchVal || ply.PFName===searchVal).map(filteredply => (
-            console.log(filteredply.PFName)
-          ))
-    }
-    const playerlist=players.map(obj=>{
+    const filteredPlayers=players.filter(player=>
+        (player.PFName.toLowerCase().includes(searchVal.toLowerCase())) || (player.TName.toLowerCase().includes(searchVal.toLowerCase())));
+    console.log(filteredPlayers);
+    
+
+    const playerlist=filteredPlayers.map(obj=>{
             return (<div className='card col-md-3 shadow-lg p-3 mb-5 bg-white rounded' style={{width:'400px',padding:'20px'}}>
                 
                 <div className='card-header text-center bg-primary' style={{color:'white'}}>
@@ -67,13 +62,16 @@ export default function Players(){
                 
         </div>)
     })
+    
+    
+    
+    
     return(
         <div>
-            <span>Search:<input type='text' placeholder='Enter search text here' onChange={(e)=>{setsearchVal(e.target.value)}}></input></span>
-            <span><button className='btn btn-primary' onClick={searchPlayer}>Find</button></span>
+            <input type='search' placeholder='Enter player name' onChange={(e)=>{setsearchVal(e.target.value)}}></input>
             <div className='row justify-content-center'>
-            
                 {playerlist}
+                
             </div>
             </div>
         
